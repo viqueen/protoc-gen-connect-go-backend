@@ -9,7 +9,6 @@ linters:
     - goconst
     - typecheck
     - gosec
-    - depguard
     - gofmt
 
 output:
