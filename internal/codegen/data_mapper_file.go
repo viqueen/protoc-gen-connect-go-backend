@@ -2,6 +2,7 @@ package codegen
 
 import (
 	"fmt"
+	"github.com/viqueen/go-protoc-gen-plugin/internal/helpers"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"strings"
 	"text/template"
@@ -47,19 +48,19 @@ func extractDataMapperFileParams(input DataMapperFileInput, message *descriptorp
 	var fields []dataField
 	for _, field := range message.GetField() {
 		isID := strings.HasSuffix(field.GetName(), "_id") || field.GetName() == "id"
-		goFieldName := toGoFieldName(field.GetName())
+		goFieldName := helpers.ToGoFieldName(field.GetName())
 		dbFieldName := fmt.Sprintf("input.%s", goFieldName)
 		if isID {
 			dbFieldName = fmt.Sprintf("input.%s.String()", goFieldName)
 		}
 		fields = append(fields, dataField{
-			ApiFieldName: snakeToCamel(field.GetName()),
+			ApiFieldName: helpers.SnakeToCamel(field.GetName()),
 			DbFieldName:  dbFieldName,
 		})
 	}
 	return dataMapperFileParams{
-		PackageName:         toGoPackageName(input.PackageName),
-		ServicePackageAlias: toGoAlias(input.PackageName),
+		PackageName:         helpers.ToGoPackageName(input.PackageName),
+		ServicePackageAlias: helpers.ToGoAlias(input.PackageName),
 		ServicePackage:      servicePackage,
 		DataGenPackage:      input.DataGenPackage,
 		DbTypeName:          message.GetName(),

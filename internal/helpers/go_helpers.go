@@ -1,4 +1,4 @@
-package codegen
+package helpers
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"unicode"
 )
 
-func toGoAlias(packageName string) string {
+func ToGoAlias(packageName string) string {
 	// Split the string by the dot
 	parts := strings.Split(packageName, ".")
 	// Join all parts except the last one
@@ -20,13 +20,13 @@ func toGoAlias(packageName string) string {
 	return prefix + string(lastPart)
 }
 
-func toGoPackageName(packageName string) string {
+func ToGoPackageName(packageName string) string {
 	parts := strings.Split(packageName, ".")
 	return fmt.Sprintf("api_%s", strings.Join(parts, "_"))
 }
 
 // toGoFieldName converts a snake_case string to CamelCase and handles special cases like "id" to "ID".
-func toGoFieldName(snake string) string {
+func ToGoFieldName(snake string) string {
 	// Split the string by underscores
 	parts := strings.Split(snake, "_")
 

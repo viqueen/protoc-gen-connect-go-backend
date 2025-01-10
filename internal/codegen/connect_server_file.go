@@ -3,6 +3,7 @@ package codegen
 import (
 	"bytes"
 	"fmt"
+	"github.com/viqueen/go-protoc-gen-plugin/internal/helpers"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"strings"
 	"text/template"
@@ -47,7 +48,7 @@ func extractConnectServerFileParams(input ConnectServerFileInput, services []*de
 	var serviceDefs []serviceDef
 	for _, service := range services {
 		servicePackage := fmt.Sprintf("%s/%s", input.ApiPackage, strings.Replace(input.PackageName, ".", "/", -1))
-		serviceConnectPackageAlias := fmt.Sprintf("%sconnect", toGoAlias(input.PackageName))
+		serviceConnectPackageAlias := fmt.Sprintf("%sconnect", helpers.ToGoAlias(input.PackageName))
 		serviceConnectPackage := fmt.Sprintf("%s/%s", servicePackage, serviceConnectPackageAlias)
 		serviceDefs = append(serviceDefs, serviceDef{
 			ServiceNameLower:            strings.TrimSuffix(strings.ToLower(service.GetName()), "service"),

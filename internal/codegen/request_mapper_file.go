@@ -2,6 +2,7 @@ package codegen
 
 import (
 	"fmt"
+	"github.com/viqueen/go-protoc-gen-plugin/internal/helpers"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"strings"
 	"text/template"
@@ -52,8 +53,8 @@ func extractRequestMapperFileParams(input RequestMapperFileInput, message *descr
 		if isID {
 			hasIdField = true
 		}
-		goFieldName := toGoFieldName(field.GetName())
-		camelCaseFieldName := snakeToCamel(field.GetName())
+		goFieldName := helpers.ToGoFieldName(field.GetName())
+		camelCaseFieldName := helpers.SnakeToCamel(field.GetName())
 		apiFieldName := fmt.Sprintf("request.Get%s()", camelCaseFieldName)
 		if isID {
 			apiFieldName = fmt.Sprintf("uuid.FromStringOrNil(request.Get%s())", camelCaseFieldName)
@@ -64,8 +65,8 @@ func extractRequestMapperFileParams(input RequestMapperFileInput, message *descr
 		})
 	}
 	return requestMapperFileParams{
-		PackageName:         toGoPackageName(input.PackageName),
-		ServicePackageAlias: toGoAlias(input.PackageName),
+		PackageName:         helpers.ToGoPackageName(input.PackageName),
+		ServicePackageAlias: helpers.ToGoAlias(input.PackageName),
 		ServicePackage:      servicePackage,
 		DataGenPackage:      input.DataGenPackage,
 		RequestName:         message.GetName(),

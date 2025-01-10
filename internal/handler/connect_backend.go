@@ -2,7 +2,9 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	"github.com/viqueen/go-protoc-gen-plugin/internal/codegen"
+	"github.com/viqueen/go-protoc-gen-plugin/internal/helpers"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/pluginpb"
@@ -45,6 +47,47 @@ func connectBackend(params map[string]string, protoFile *descriptorpb.FileDescri
 		Name:    proto.String(serverFilePath),
 		Content: proto.String(connectServerFileContent),
 	})
+
+	apiTarget := toApiTarget(packageName)
+	for _, service := range services {
+		serviceName := service.GetName()
+		serviceNameSnake := helpers.CamelToSnake(serviceName)
+		serviceFileName := fmt.Sprintf("%s.go", serviceNameSnake)
+		serviceFilePath := filepath.Join("internal", apiTarget, serviceFileName)
+
+		connectServiceFileContent, serviceErr := codegen.ConnectServiceFile(codegen.ConnectServiceFileInput{
+			PackageName:    packageName,
+			ApiPackage:     apiPackage,
+			DataGenPackage: dataGenPackage,
+		}, service)
+		if serviceErr != nil {
+			response.Error = proto.String(serviceErr.Error())
+		}
+
+		response.File = append(response.File, &pluginpb.CodeGeneratorResponse_File{
+			Name:    proto.String(serviceFilePath),
+			Content: proto.String(connectServiceFileContent),
+		})
+
+		for _, method := range service.GetMethod() {
+			rpcName := method.GetName()
+			rpcFileName := fmt.Sprintf("%s.go", helpers.CamelToSnake(rpcName))
+			rpcFilePath := filepath.Join("internal", apiTarget, rpcFileName)
+
+			rpcFileContent, rpcErr := codegen.ConnectHandlerFile(codegen.ConnectHandlerFileInput{
+				PackageName: packageName,
+				ApiPackage:  apiPackage,
+			}, service, method)
+			if rpcErr != nil {
+				response.Error = proto.String(rpcErr.Error())
+			}
+
+			response.File = append(response.File, &pluginpb.CodeGeneratorResponse_File{
+				Name:    proto.String(rpcFilePath),
+				Content: proto.String(rpcFileContent),
+			})
+		}
+	}
 
 	return nil
 }
