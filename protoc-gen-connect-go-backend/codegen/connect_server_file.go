@@ -69,6 +69,7 @@ var connectServerFileTemplate = `
 package main
 
 import (
+	"connectrpc.com/connect"
 	connectcors "connectrpc.com/cors"
 	"database/sql"
 	_ "github.com/lib/pq"
