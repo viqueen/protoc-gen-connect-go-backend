@@ -8,8 +8,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/testify v1.9.0 h1:HtqpIVDClZ4nwg75+f6Lvsy/wHu+3BoSGCbBAcpTsTg=
 github.com/stretchr/testify v1.9.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
-github.com/viqueen/protoc-gen-sqlc v0.0.1 h1:7mF7uX/og4cFbbHq/g922GYuK8LJdd7O7VP24XoEMjQ=
-github.com/viqueen/protoc-gen-sqlc v0.0.1/go.mod h1:Sjqn9wuvdw6FLXRUrHxFG4+UHDUFXmmm7vUgkUBinfg=
+github.com/viqueen/protoc-gen-sqlc v0.0.3 h1:9P+7HNtRi42RomKwrEeSOQyu0z4KxI2lQed4nxsYRKA=
+github.com/viqueen/protoc-gen-sqlc v0.0.3/go.mod h1:Sjqn9wuvdw6FLXRUrHxFG4+UHDUFXmmm7vUgkUBinfg=
 golang.org/x/sync v0.10.0 h1:3NQrjDixjgGwUOCaF8w2+VYHv0Ve/vGYSbdkTa98gmQ=
 golang.org/x/sync v0.10.0/go.mod h1:Czt+wKu1gCyEFDUtn0jG5QVvpJ6rzVqr5aXyt9drQfk=
 google.golang.org/protobuf v1.36.2 h1:R8FeyR1/eLmkutZOM5CWghmo5itiG9z0ktFlTVLuTmU=

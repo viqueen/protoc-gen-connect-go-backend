@@ -53,7 +53,7 @@ func extractDataMapperFileParams(input DataMapperFileInput, message *descriptorp
 			dbFieldName = fmt.Sprintf("input.%s.String()", goFieldName)
 		}
 		fields = append(fields, dataField{
-			ApiFieldName: strings.Title(field.GetName()),
+			ApiFieldName: snakeToCamel(field.GetName()),
 			DbFieldName:  dbFieldName,
 		})
 	}

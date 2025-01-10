@@ -50,8 +50,3 @@ func sqlcDataMappers(params map[string]string, protoFile *descriptorpb.FileDescr
 
 	return nil
 }
-
-func toApiTarget(packageName string) string {
-	parts := strings.Split(packageName, ".")
-	return fmt.Sprintf("api-%s", strings.Join(parts, "-"))
-}

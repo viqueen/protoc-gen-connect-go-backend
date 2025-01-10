@@ -7,3 +7,7 @@ import "google/protobuf/descriptor.proto";
 extend google.protobuf.MessageOptions {
   string sqlc_entity = 80000;
 }
+
+extend google.protobuf.MessageOptions {
+  bool sqlc_request = 60001;
+}

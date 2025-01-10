@@ -13,7 +13,7 @@ import (
 	"testing"
 )
 
-func TestProtoFileHandler(t *testing.T) {
+func TestProtoFileHandler_DataMappers(t *testing.T) {
 	t.Parallel()
 
 	cwd, err := os.Getwd()
@@ -41,5 +41,36 @@ func TestProtoFileHandler(t *testing.T) {
 		err = handler.ProtoFileHandler(params, protoDescriptor, response)
 		assert.NoError(t, err)
 		assert.Len(t, response.File, 2)
+	}
+}
+
+func TestProtoFileHandler_RequestMappers(t *testing.T) {
+	t.Parallel()
+
+	cwd, err := os.Getwd()
+	require.NoError(t, err)
+
+	musicProto := "music/v1/music_service.proto"
+	compiler := protocompile.Compiler{
+		Resolver: &protocompile.SourceResolver{
+			ImportPaths: []string{
+				filepath.Join(cwd, "../../test-protos"),
+			},
+		},
+	}
+	descriptors, err := compiler.Compile(context.Background(), musicProto)
+	require.NoError(t, err)
+
+	params := map[string]string{
+		"api_package":      "api",
+		"data_gen_package": "data",
+	}
+
+	response := &pluginpb.CodeGeneratorResponse{}
+	for _, desc := range descriptors {
+		protoDescriptor := protoutil.ProtoFromFileDescriptor(desc)
+		err = handler.ProtoFileHandler(params, protoDescriptor, response)
+		assert.NoError(t, err)
+		assert.Len(t, response.File, 10)
 	}
 }

@@ -1,0 +1,118 @@
+syntax = "proto3";
+
+import "sqlc/v1/options.proto";
+import "music/v1/music_models.proto";
+
+package music.v1;
+
+service MusicService {
+  // mutations - create, update, delete
+  rpc CreateAlbum(CreateAlbumRequest) returns (CreateAlbumResponse) {}
+  rpc UpdateAlbum(UpdateAlbumRequest) returns (UpdateAlbumResponse) {}
+  rpc DeleteAlbum(DeleteAlbumRequest) returns (DeleteAlbumResponse) {}
+  rpc CreateTrack(CreateTrackRequest) returns (CreateTrackResponse) {}
+  rpc UpdateTrack(UpdateTrackRequest) returns (UpdateTrackResponse) {}
+  rpc DeleteTrack(DeleteTrackRequest) returns (DeleteTrackResponse) {}
+
+  // queries - list, get
+  rpc ListAlbums(ListAlbumsRequest) returns (ListAlbumsResponse) {}
+  rpc GetAlbum(GetAlbumRequest) returns (GetAlbumResponse) {}
+  rpc ListTracks(ListTracksRequest) returns (ListTracksResponse) {}
+  rpc GetTrack(GetTrackRequest) returns (GetTrackResponse) {}
+}
+
+message CreateAlbumRequest {
+  option(sqlc.v1.sqlc_request) = true;
+  string name = 1;
+}
+
+message CreateAlbumResponse {
+  Album album = 1;
+}
+
+message UpdateAlbumRequest {
+  option(sqlc.v1.sqlc_request) = true;
+  string id = 1;
+  string name = 2;
+}
+
+message UpdateAlbumResponse {
+  Album album = 1;
+}
+
+message DeleteAlbumRequest {
+  option(sqlc.v1.sqlc_request) = true;
+  string id = 1;
+}
+
+message DeleteAlbumResponse {
+  Album album = 1;
+}
+
+message CreateTrackRequest {
+  option(sqlc.v1.sqlc_request) = true;
+  string name = 1;
+  string album_id = 2;
+}
+
+message CreateTrackResponse {
+  Track track = 1;
+}
+
+message UpdateTrackRequest {
+  option(sqlc.v1.sqlc_request) = true;
+  string id = 1;
+  string name = 2;
+  string album_id = 3;
+}
+
+message UpdateTrackResponse {
+  Track track = 1;
+}
+
+message DeleteTrackRequest {
+  option(sqlc.v1.sqlc_request) = true;
+  string id = 1;
+}
+
+message DeleteTrackResponse {
+  Track track = 1;
+}
+
+message ListAlbumsRequest {
+  option(sqlc.v1.sqlc_request) = true;
+  int32 page_limit = 1;
+  int32 page_offset = 2;
+}
+
+message ListAlbumsResponse {
+  repeated Album albums = 1;
+}
+
+message GetAlbumRequest {
+  option(sqlc.v1.sqlc_request) = true;
+  string id = 1;
+}
+
+message GetAlbumResponse {
+  Album album = 1;
+}
+
+message ListTracksRequest {
+  option(sqlc.v1.sqlc_request) = true;
+  int32 page_limit = 1;
+  int32 page_offset = 2;
+}
+
+message ListTracksResponse {
+  repeated Track tracks = 1;
+}
+
+message GetTrackRequest {
+  option(sqlc.v1.sqlc_request) = true;
+  string id = 1;
+}
+
+message GetTrackResponse {
+  Track track = 1;
+}
