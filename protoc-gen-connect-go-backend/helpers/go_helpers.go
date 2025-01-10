@@ -2,6 +2,8 @@ package helpers
 
 import (
 	"fmt"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	"strings"
 	"unicode"
 )
@@ -41,7 +43,7 @@ func ToGoFieldName(snake string) string {
 			result.WriteString(val)
 		} else {
 			// Capitalize the first letter of each part
-			result.WriteString(strings.Title(part))
+			result.WriteString(cases.Title(language.English).String(part))
 		}
 	}
 	return result.String()

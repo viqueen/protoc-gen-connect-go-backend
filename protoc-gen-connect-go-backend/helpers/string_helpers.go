@@ -1,6 +1,8 @@
 package helpers
 
 import (
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	"regexp"
 	"strings"
 	"unicode"
@@ -10,7 +12,7 @@ func SnakeToCamel(snake string) string {
 	parts := strings.Split(snake, "_")
 	var result strings.Builder
 	for _, part := range parts {
-		result.WriteString(strings.Title(part))
+		result.WriteString(cases.Title(language.English).String(part))
 	}
 	return result.String()
 }
