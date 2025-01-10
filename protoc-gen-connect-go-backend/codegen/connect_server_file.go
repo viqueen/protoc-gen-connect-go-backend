@@ -82,9 +82,16 @@ import (
 	{{.ServiceInternalPackageAlias}} "{{.ServiceInternalPackage}}"
 	{{.ServiceConnectPackageAlias}} "{{.ServiceConnectPackage}}"
 	{{end}}
+
+	"connectrpc.com/otelconnect"
 )
 
 func main() {
+	otelInterceptor, otelErr := otelconnect.NewInterceptor()
+	if otelErr != nil {
+		log.Fatalf("failed to initialise otel interceptor: %v", otelErr)
+	}
+
 	db, dbErr := initialiseDB()
 	if dbErr != nil {
 		log.Fatalf("failed to initialise db: %v", dbErr)
@@ -94,7 +101,7 @@ func main() {
 	mux := http.NewServeMux()
 	{{range .Services}}
 	{{.ServiceNameLower}}Service := {{.ServiceInternalPackageAlias}}.New{{.ServiceName}}Service({{.ServiceInternalPackageAlias}}.{{.ServiceName}}ServiceConfig{Store: dataStore})
-	{{.ServiceNameLower}}Path, {{.ServiceNameLower}}Handler := {{.ServiceConnectPackageAlias}}.New{{.ServiceName}}ServiceHandler({{.ServiceNameLower}}Service)
+	{{.ServiceNameLower}}Path, {{.ServiceNameLower}}Handler := {{.ServiceConnectPackageAlias}}.New{{.ServiceName}}ServiceHandler({{.ServiceNameLower}}Service, connect.WithInterceptors(otelInterceptor))
 	mux.Handle({{.ServiceNameLower}}Path, {{.ServiceNameLower}}Handler)
 	{{end}}
 
