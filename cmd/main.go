@@ -1,12 +1,13 @@
 package main
 
 import (
+	"github.com/viqueen/go-protoc-gen-plugin/internal/handler"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/pluginpb"
 	"io"
 	"log"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -18,23 +19,27 @@ func main() {
 	if err = proto.Unmarshal(data, request); err != nil {
 		log.Fatalf("failed to unmarshal input: %v", err)
 	}
-
+	params := asMap(request.GetParameter())
 	response := &pluginpb.CodeGeneratorResponse{}
 	for _, protoFile := range request.GetProtoFile() {
-		processFile(protoFile, response)
+		err = handler.ProtoFileHandler(params, protoFile, response)
+		if err != nil {
+			response.Error = proto.String(err.Error())
+		}
 	}
 	respond(response)
 }
 
-func processFile(protoFile *descriptorpb.FileDescriptorProto, response *pluginpb.CodeGeneratorResponse) {
-	services := protoFile.GetService()
-	for _, service := range services {
-		log.Printf("service: %v", service)
-		methods := service.GetMethod()
-		for _, method := range methods {
-			log.Printf("method: %v", method)
+func asMap(params string) map[string]string {
+	result := make(map[string]string)
+	for _, param := range strings.Split(params, ",") {
+		parts := strings.Split(param, "=")
+		if len(parts) != 2 {
+			continue
 		}
+		result[parts[0]] = parts[1]
 	}
+	return result
 }
 
 func respond(resp *pluginpb.CodeGeneratorResponse) {
