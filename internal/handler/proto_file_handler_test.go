@@ -33,6 +33,7 @@ func TestProtoFileHandler_DataMappers(t *testing.T) {
 	params := map[string]string{
 		"api_package":      "api",
 		"data_gen_package": "data",
+		"internal_package": "internal",
 	}
 
 	response := &pluginpb.CodeGeneratorResponse{}
@@ -64,6 +65,7 @@ func TestProtoFileHandler_RequestMappers(t *testing.T) {
 	params := map[string]string{
 		"api_package":      "api",
 		"data_gen_package": "data",
+		"internal_package": "internal",
 	}
 
 	response := &pluginpb.CodeGeneratorResponse{}
@@ -71,6 +73,6 @@ func TestProtoFileHandler_RequestMappers(t *testing.T) {
 		protoDescriptor := protoutil.ProtoFromFileDescriptor(desc)
 		err = handler.ProtoFileHandler(params, protoDescriptor, response)
 		assert.NoError(t, err)
-		assert.Len(t, response.File, 10)
+		assert.Len(t, response.File, 22)
 	}
 }
