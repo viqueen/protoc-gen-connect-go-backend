@@ -3,7 +3,7 @@ package handler
 import (
 	"errors"
 	"fmt"
-	"github.com/viqueen/go-protoc-gen-plugin/internal/codegen"
+	"github.com/viqueen/protoc-gen-connect-go-backend/protoc-gen-connect-go-backend/codegen"
 	"github.com/viqueen/protoc-gen-sqlc/pkg/helpers"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/descriptorpb"
@@ -12,12 +12,11 @@ import (
 	"strings"
 )
 
-func requestMappers(params map[string]string, protoFile *descriptorpb.FileDescriptorProto, response *pluginpb.CodeGeneratorResponse) error {
+func sqlcDataMappers(params map[string]string, protoFile *descriptorpb.FileDescriptorProto, response *pluginpb.CodeGeneratorResponse) error {
 	messages := protoFile.GetMessageType()
 	if len(messages) == 0 {
 		return nil
 	}
-
 	apiPackage, ok := params["api_package"]
 	if !ok {
 		return errors.New("api_package is required")
@@ -26,18 +25,16 @@ func requestMappers(params map[string]string, protoFile *descriptorpb.FileDescri
 	if !ok {
 		return errors.New("data_gen_package is required")
 	}
-
 	packageName := protoFile.GetPackage()
-	apiTarget := toApiTarget(packageName)
-
+	apiTarget := toApiTarget(protoFile.GetPackage())
 	for _, message := range messages {
-		_, sqlRequestOk := helpers.SqlcRequestOption(message)
-		if !sqlRequestOk {
+		_, sqlEntityOk := helpers.SqlcEntityOption(message)
+		if !sqlEntityOk {
 			continue
 		}
-		requestMappersFileName := fmt.Sprintf("request_mapper_%s.go", strings.ToLower(message.GetName()))
-		requestMappersFilePath := filepath.Join("internal", apiTarget, requestMappersFileName)
-		requestMappersFileContent, err := codegen.RequestMapperFile(codegen.RequestMapperFileInput{
+		dataMapperFileName := fmt.Sprintf("data_mapper_%s.go", strings.ToLower(message.GetName()))
+		dataMapperFilePath := filepath.Join("internal", apiTarget, dataMapperFileName)
+		dataMapperFileContent, err := codegen.DataMapperFile(codegen.DataMapperFileInput{
 			PackageName:    packageName,
 			ApiPackage:     apiPackage,
 			DataGenPackage: dataGenPackage,
@@ -46,9 +43,10 @@ func requestMappers(params map[string]string, protoFile *descriptorpb.FileDescri
 			response.Error = proto.String(err.Error())
 		}
 		response.File = append(response.File, &pluginpb.CodeGeneratorResponse_File{
-			Name:    proto.String(requestMappersFilePath),
-			Content: proto.String(requestMappersFileContent),
+			Name:    proto.String(dataMapperFilePath),
+			Content: proto.String(dataMapperFileContent),
 		})
 	}
+
 	return nil
 }

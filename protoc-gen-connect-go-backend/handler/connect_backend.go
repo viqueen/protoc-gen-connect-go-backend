@@ -3,8 +3,8 @@ package handler
 import (
 	"errors"
 	"fmt"
-	"github.com/viqueen/go-protoc-gen-plugin/internal/codegen"
-	"github.com/viqueen/go-protoc-gen-plugin/internal/helpers"
+	"github.com/viqueen/protoc-gen-connect-go-backend/protoc-gen-connect-go-backend/codegen"
+	"github.com/viqueen/protoc-gen-connect-go-backend/protoc-gen-connect-go-backend/helpers"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/pluginpb"

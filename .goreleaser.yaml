@@ -8,7 +8,7 @@ before:
     - go test ./...
 
 builds:
-  - main: cmd/main.go
+  - main: protoc-gen-connect-go-backend/main.go
     env:
       - CGO_ENABLED=0
     goos:

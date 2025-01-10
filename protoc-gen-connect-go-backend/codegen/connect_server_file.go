@@ -3,7 +3,7 @@ package codegen
 import (
 	"bytes"
 	"fmt"
-	"github.com/viqueen/go-protoc-gen-plugin/internal/helpers"
+	"github.com/viqueen/protoc-gen-connect-go-backend/protoc-gen-connect-go-backend/helpers"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"strings"
 	"text/template"

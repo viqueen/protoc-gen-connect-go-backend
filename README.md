@@ -9,5 +9,5 @@ Protocol Buffer plugin to generate Go code for the Connect backend.
 - using **go**
 
 ```bash
-go install github.com/viqueen/protoc-gen-connect-go-backend/cmd@latest
+go install github.com/viqueen/protoc-gen-connect-go-backend/protoc-gen-connect-go-backend@latest
 ```

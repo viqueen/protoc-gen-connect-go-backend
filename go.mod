@@ -1,4 +1,4 @@
-module github.com/viqueen/go-protoc-gen-plugin
+module github.com/viqueen/protoc-gen-connect-go-backend
 
 go 1.23.1
 

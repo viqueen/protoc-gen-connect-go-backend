@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/viqueen/go-protoc-gen-plugin/internal/handler"
+	"github.com/viqueen/protoc-gen-connect-go-backend/protoc-gen-connect-go-backend/handler"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/pluginpb"
 	"io"
