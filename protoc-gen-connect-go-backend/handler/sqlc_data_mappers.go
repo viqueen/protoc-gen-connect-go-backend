@@ -25,7 +25,10 @@ func sqlcDataMappers(params map[string]string, protoFile *descriptorpb.FileDescr
 	if !ok {
 		return errors.New("data_gen_package is required")
 	}
-	dataGenTablePrefix, _ := params["data_gen_table_prefix"]
+	dataGenTablePrefix, ok := params["data_gen_table_prefix"]
+	if !ok {
+		dataGenTablePrefix = ""
+	}
 
 	packageName := protoFile.GetPackage()
 	apiTarget := toApiTarget(protoFile.GetPackage())
