@@ -52,6 +52,18 @@ func ConnectHandlerFile(input ConnectHandlerFileInput, service *descriptorpb.Ser
 		}
 		return buf.String(), nil
 	}
+	if params.RpcMethod == "Update" {
+		tmpl, err := template.New("updateConnectHandlerFile").Parse(updateConnectHandlerFileTemplate)
+		if err != nil {
+			return "", err
+		}
+		var buf bytes.Buffer
+		err = tmpl.Execute(&buf, params)
+		if err != nil {
+			panic(err)
+		}
+		return buf.String(), nil
+	}
 	tmpl, err := template.New("unimplementedConnectHandlerFile").Parse(unimplementedConnectHandlerFileTemplate)
 	if err != nil {
 		return "", err
@@ -101,9 +113,9 @@ var getConnectHandlerFileTemplate = `
 package {{.PackageName}}
 
 import (
+	{{.ServicePackageAlias}} "{{.ServicePackage}}"
 	"connectrpc.com/connect"
 	"context"
-	{{.ServicePackageAlias}} "{{.ServicePackage}}"
 )
 
 func (service {{.ServiceStructName}}) {{.RpcName}}(ctx context.Context, request *connect.Request[{{.ServicePackageAlias}}.{{.RpcRequestName}}]) (*connect.Response[{{.ServicePackageAlias}}.{{.RpcResponseName}}], error) {
@@ -124,9 +136,9 @@ package {{.PackageName}}
 
 import (
 	"_shared/go-sdk/collections"
+	{{.ServicePackageAlias}} "{{.ServicePackage}}"
 	"connectrpc.com/connect"
 	"context"
-	{{.ServicePackageAlias}} "{{.ServicePackage}}"
 )
 
 func (service {{.ServiceStructName}}) {{.RpcName}}(ctx context.Context, request *connect.Request[{{.ServicePackageAlias}}.{{.RpcRequestName}}]) (*connect.Response[{{.ServicePackageAlias}}.{{.RpcResponseName}}], error) {
@@ -146,10 +158,10 @@ var createConnectHandlerFileTemplate = `
 package {{.PackageName}}
 
 import (
+	{{.ServicePackageAlias}} "{{.ServicePackage}}"
 	"connectrpc.com/connect"
 	"context"
 	"github.com/gofrs/uuid"
-	{{.ServicePackageAlias}} "{{.ServicePackage}}"
 )
 
 func (service {{.ServiceStructName}}) {{.RpcName}}(ctx context.Context, request *connect.Request[{{.ServicePackageAlias}}.{{.RpcRequestName}}]) (*connect.Response[{{.ServicePackageAlias}}.{{.RpcResponseName}}], error) {
@@ -166,6 +178,30 @@ func (service {{.ServiceStructName}}) {{.RpcName}}(ctx context.Context, request 
 	return response, nil
 }
 `
+
+var updateConnectHandlerFileTemplate = `
+package {{.PackageName}}
+
+import (
+	{{.ServicePackageAlias}} "{{.ServicePackage}}"
+	"connectrpc.com/connect"
+	"context"
+	"github.com/gofrs/uuid"
+)
+
+func (service {{.ServiceStructName}}) {{.RpcName}}(ctx context.Context, request *connect.Request[{{.ServicePackageAlias}}.{{.RpcRequestName}}]) (*connect.Response[{{.ServicePackageAlias}}.{{.RpcResponseName}}], error) {
+	dbParams := {{.RpcRequestName}}ToDbParam(request.Msg)
+	id := uuid.Must(uuid.NewV4())
+	dbParams.ID = id
+	updated, err := service.store.{{.RpcName}}(ctx, dbParams)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInternal, err)
+	}
+	response := connect.NewResponse(&{{.ServicePackageAlias}}.{{.RpcResponseName}}{
+		{{.MessageName}}: DB{{.MessageName}}ToAPI{{.MessageName}}(updated),
+	})
+	return response, nil
+}`
 
 var unimplementedConnectHandlerFileTemplate = `
 package {{.PackageName}}
