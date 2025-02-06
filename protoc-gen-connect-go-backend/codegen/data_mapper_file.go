@@ -3,15 +3,18 @@ package codegen
 import (
 	"fmt"
 	"github.com/viqueen/protoc-gen-connect-go-backend/protoc-gen-connect-go-backend/helpers"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"strings"
 	"text/template"
 )
 
 type DataMapperFileInput struct {
-	PackageName    string
-	ApiPackage     string
-	DataGenPackage string
+	PackageName     string
+	ApiPackage      string
+	DataGenPackage  string
+	TableNamePrefix string
 }
 
 func DataMapperFile(input DataMapperFileInput, message *descriptorpb.DescriptorProto) (string, error) {
@@ -58,12 +61,13 @@ func extractDataMapperFileParams(input DataMapperFileInput, message *descriptorp
 			DbFieldName:  dbFieldName,
 		})
 	}
+	tablePrefix := cases.Title(language.English).String(strings.TrimSuffix(input.TableNamePrefix, "_"))
 	return dataMapperFileParams{
 		PackageName:         helpers.ToGoPackageName(input.PackageName),
 		ServicePackageAlias: helpers.ToGoAlias(input.PackageName),
 		ServicePackage:      servicePackage,
 		DataGenPackage:      input.DataGenPackage,
-		DbTypeName:          message.GetName(),
+		DbTypeName:          fmt.Sprintf("%s%s", tablePrefix, message.GetName()),
 		MessageName:         message.GetName(),
 		Fields:              fields,
 	}

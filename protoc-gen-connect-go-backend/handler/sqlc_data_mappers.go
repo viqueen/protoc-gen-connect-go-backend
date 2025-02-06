@@ -25,6 +25,8 @@ func sqlcDataMappers(params map[string]string, protoFile *descriptorpb.FileDescr
 	if !ok {
 		return errors.New("data_gen_package is required")
 	}
+	dataGenTablePrefix, _ := params["data_gen_table_prefix"]
+
 	packageName := protoFile.GetPackage()
 	apiTarget := toApiTarget(protoFile.GetPackage())
 	for _, message := range messages {
@@ -35,9 +37,10 @@ func sqlcDataMappers(params map[string]string, protoFile *descriptorpb.FileDescr
 		dataMapperFileName := fmt.Sprintf("data_mapper_%s.go", strings.ToLower(message.GetName()))
 		dataMapperFilePath := filepath.Join("internal", apiTarget, dataMapperFileName)
 		dataMapperFileContent, err := codegen.DataMapperFile(codegen.DataMapperFileInput{
-			PackageName:    packageName,
-			ApiPackage:     apiPackage,
-			DataGenPackage: dataGenPackage,
+			PackageName:     packageName,
+			ApiPackage:      apiPackage,
+			DataGenPackage:  dataGenPackage,
+			TableNamePrefix: dataGenTablePrefix,
 		}, message)
 		if err != nil {
 			response.Error = proto.String(err.Error())

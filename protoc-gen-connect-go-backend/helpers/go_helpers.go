@@ -27,7 +27,7 @@ func ToGoPackageName(packageName string) string {
 	return fmt.Sprintf("api_%s", strings.Join(parts, "_"))
 }
 
-// toGoFieldName converts a snake_case string to CamelCase and handles special cases like "id" to "ID".
+// ToGoFieldName converts a snake_case string to CamelCase and handles special cases like "id" to "ID".
 func ToGoFieldName(snake string) string {
 	// Split the string by underscores
 	parts := strings.Split(snake, "_")
